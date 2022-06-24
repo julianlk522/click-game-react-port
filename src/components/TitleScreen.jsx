@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-function TitleScreen({ secsPerRound }) {
+function TitleScreen({ secsPerRound, setCount, setGameStart }) {
 	const navigate = useNavigate()
 
 	// parse secsPerRound and return formatted string
@@ -56,7 +56,11 @@ function TitleScreen({ secsPerRound }) {
 				<button
 					id='startButton'
 					className='btn btn-secondary'
-					onClick={() => navigate('/game')}
+					onClick={() => {
+						setCount(0)
+						setGameStart(true)
+						navigate('/game')
+					}}
 				>
 					Click me to start playing!
 				</button>

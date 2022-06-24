@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import GameScreen from './components/GameScreen.jsx'
 import TitleScreen from './components/TitleScreen.jsx'
@@ -6,7 +6,24 @@ import './index.css'
 
 function App() {
 	const [count, setCount] = useState(null)
-	const [secsPerRound, setSecsPerRound] = useState(5)
+	const [secsPerRound, setSecsPerRound] = useState(10)
+	const [gameStart, setGameStart] = useState(true)
+	let timerTimeout
+	// const [gameStart, setGameStart] = useState(true)
+
+	const countdownLoop = () => {
+		timerTimeout = setTimeout(() => {
+			setSecsPerRound((prev) => prev - 1)
+			console.log(secsPerRound, 'from loop func')
+		}, 1000)
+		return
+	}
+	useEffect(() => {
+		gameStart && secsPerRound && countdownLoop()
+
+		return () => clearTimeout(timerTimeout)
+		// eslint-disable-next-line
+	}, [secsPerRound, gameStart, timerTimeout])
 
 	return (
 		<div
@@ -22,7 +39,11 @@ function App() {
 						<Route
 							path='/'
 							element={
-								<TitleScreen secsPerRound={secsPerRound} />
+								<TitleScreen
+									secsPerRound={secsPerRound}
+									setCount={setCount}
+									setGameStart={setGameStart}
+								/>
 							}
 						/>
 						<Route
@@ -31,6 +52,7 @@ function App() {
 								<GameScreen
 									secsPerRound={secsPerRound}
 									count={count}
+									setCount={setCount}
 								/>
 							}
 						/>
