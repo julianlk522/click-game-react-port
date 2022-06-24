@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import GameScreen from './components/GameScreen.jsx'
+import GameOver from './components/GameOver.jsx'
 import TitleScreen from './components/TitleScreen.jsx'
 import './index.css'
 
 function App() {
-	const [count, setCount] = useState(null)
-	const [secsPerRound, setSecsPerRound] = useState(10)
-	const [gameStart, setGameStart] = useState(true)
+	const [count, setCount] = useState(0)
+	const [secsPerRound, setSecsPerRound] = useState(0)
+	const [gameStart, setGameStart] = useState(false)
+
 	let timerTimeout
-	// const [gameStart, setGameStart] = useState(true)
 
 	const countdownLoop = () => {
 		timerTimeout = setTimeout(() => {
@@ -20,6 +21,10 @@ function App() {
 	}
 	useEffect(() => {
 		gameStart && secsPerRound && countdownLoop()
+
+		if (!secsPerRound) {
+			setGameStart(false)
+		}
 
 		return () => clearTimeout(timerTimeout)
 		// eslint-disable-next-line
@@ -53,6 +58,15 @@ function App() {
 									secsPerRound={secsPerRound}
 									count={count}
 									setCount={setCount}
+								/>
+							}
+						/>
+						<Route
+							path='/gameOver'
+							element={
+								<GameOver
+									count={count}
+									secsPerRound={secsPerRound}
 								/>
 							}
 						/>
