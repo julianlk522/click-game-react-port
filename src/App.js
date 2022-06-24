@@ -7,28 +7,29 @@ import './index.css'
 
 function App() {
 	const [count, setCount] = useState(0)
-	const [secsPerRound, setSecsPerRound] = useState(0)
+	const [secsPerRound, setSecsPerRound] = useState(10)
+	const [secsRemaining, setSecsRemaining] = useState(secsPerRound)
 	const [gameStart, setGameStart] = useState(false)
 
 	let timerTimeout
 
 	const countdownLoop = () => {
 		timerTimeout = setTimeout(() => {
-			setSecsPerRound((prev) => prev - 1)
-			console.log(secsPerRound, 'from loop func')
+			setSecsRemaining((prev) => prev - 1)
+			console.log(secsRemaining, 'from loop func')
 		}, 1000)
 		return
 	}
 	useEffect(() => {
-		gameStart && secsPerRound && countdownLoop()
+		gameStart && secsRemaining && countdownLoop()
 
-		if (!secsPerRound) {
+		if (!secsRemaining) {
 			setGameStart(false)
 		}
 
 		return () => clearTimeout(timerTimeout)
 		// eslint-disable-next-line
-	}, [secsPerRound, gameStart, timerTimeout])
+	}, [secsRemaining, gameStart, timerTimeout])
 
 	return (
 		<div
@@ -55,7 +56,7 @@ function App() {
 							path='/game'
 							element={
 								<GameScreen
-									secsPerRound={secsPerRound}
+									secsRemaining={secsRemaining}
 									count={count}
 									setCount={setCount}
 								/>
@@ -66,7 +67,11 @@ function App() {
 							element={
 								<GameOver
 									count={count}
+									setCount={setCount}
+									setGameStart={setGameStart}
 									secsPerRound={secsPerRound}
+									secsRemaining={secsRemaining}
+									setSecsRemaining={setSecsRemaining}
 								/>
 							}
 						/>

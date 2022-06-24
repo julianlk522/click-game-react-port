@@ -1,6 +1,6 @@
 import React from 'react'
 
-function TimerArea({ secsPerRound }) {
+function TimerArea({ secsRemaining }) {
 	//  calc time in mins/secs and update html
 	const getTimeInMinsAndSecs = (gameTime) => {
 		let minutes = Math.floor(gameTime / 60)
@@ -16,7 +16,7 @@ function TimerArea({ secsPerRound }) {
 			className='m-16 w-1/2 flex justify-center items-center'
 		>
 			<h3 id='timer' className='font-bold'>
-				{secsPerRound ? getTimeInMinsAndSecs(secsPerRound) : '0 : 00'}
+				{secsRemaining ? getTimeInMinsAndSecs(secsRemaining) : '0 : 00'}
 			</h3>
 		</div>
 	)

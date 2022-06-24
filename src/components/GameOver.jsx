@@ -1,8 +1,18 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import Highscores from './Highscores'
 import TimerArea from './TimerArea'
 
-function GameOver({ count, secsPerRound }) {
+function GameOver({
+	count,
+	secsPerRound,
+	secsRemaining,
+	setSecsRemaining,
+	setGameStart,
+	setCount,
+}) {
+	const navigate = useNavigate()
+
 	return (
 		<>
 			<div className='flex flex-col justify-center items-center'>
@@ -14,7 +24,7 @@ function GameOver({ count, secsPerRound }) {
 					<input
 						type='text'
 						id='nameInput'
-						className='w-48 mx-4 p-1 bg-none border-0 text-indigo-600 rounded-lg cursor-text'
+						className='w-48 mx-4 p-2 bg-none border-0 text-indigo-600 rounded-lg cursor-text text-sm'
 						placeholder='Name for your submission'
 					/>
 					<button
@@ -24,8 +34,18 @@ function GameOver({ count, secsPerRound }) {
 						Save your score!
 					</button>
 				</form>
-				<TimerArea secsPerRound={secsPerRound} />
-				<button id='replay' className='btn btn-secondary'>
+				<TimerArea secsRemaining={secsRemaining} />
+				<button
+					id='replay'
+					className='btn btn-secondary'
+					onClick={(e) => {
+						e.preventDefault()
+						setCount(0)
+						setSecsRemaining(10)
+						setGameStart(true)
+						navigate('/game')
+					}}
+				>
 					Play again?
 				</button>
 			</div>
