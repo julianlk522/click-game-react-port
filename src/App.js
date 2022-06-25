@@ -7,7 +7,7 @@ import './index.css'
 
 function App() {
 	const [count, setCount] = useState(0)
-	const [secsPerRound, setSecsPerRound] = useState(10)
+	const [secsPerRound, setSecsPerRound] = useState(50)
 	const [secsRemaining, setSecsRemaining] = useState(secsPerRound)
 	const [gameStart, setGameStart] = useState(false)
 
@@ -16,7 +16,6 @@ function App() {
 	const countdownLoop = () => {
 		timerTimeout = setTimeout(() => {
 			setSecsRemaining((prev) => prev - 1)
-			console.log(secsRemaining, 'from loop func')
 		}, 1000)
 		return
 	}
@@ -38,7 +37,7 @@ function App() {
 		>
 			<div
 				id='gameArea'
-				className='w-[95%] h-[90%] bg-darkViolet bg-opacity-90 text-yellow-100 rounded-3xl flex justify-evenly relative shadow-actuallyXl'
+				className='w-[95%] h-[90%] bg-darkViolet bg-opacity-90 text-yellow-100 rounded-3xl flex justify-evenly shadow-actuallyXl relative'
 			>
 				<Router>
 					<Routes>

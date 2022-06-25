@@ -41,7 +41,7 @@ function GameOver({
 					onClick={(e) => {
 						e.preventDefault()
 						setCount(0)
-						setSecsRemaining(10)
+						setSecsRemaining(secsPerRound)
 						setGameStart(true)
 						navigate('/game')
 					}}
