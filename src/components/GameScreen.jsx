@@ -6,19 +6,25 @@ function GameScreen({ secsRemaining, count, setCount }) {
 	const navigate = useNavigate()
 
 	const [word, setWord] = useState('')
-	const [guess, setGuess] = useState('')
+	const [partialWord, setPartialWord] = useState('')
+
+	const fetchNewWord = async () => {
+		const data = await fetch('https://random-word-api.herokuapp.com/word')
+		const response = await data.json()
+		setWord(response[0])
+		console.log(response)
+	}
 
 	useEffect(() => {
-		const fetchNewWord = async () => {
-			const data = await fetch(
-				'https://random-word-api.herokuapp.com/word'
-			)
-			const response = await data.json()
-			setWord(response)
-			console.log(response)
-		}
 		fetchNewWord()
 	}, [])
+
+	useEffect(() => {
+		if (partialWord === word) {
+			setPartialWord('')
+			fetchNewWord()
+		}
+	}, [partialWord])
 
 	// useEffect(() => {
 	// 	!secsRemaining && navigate('/gameOver')
@@ -36,8 +42,15 @@ function GameScreen({ secsRemaining, count, setCount }) {
 			>
 				<input
 					id='wordInput'
-					className='input innput-bordered input-primary'
-					value={guess ? guess : 'start typing!'}
+					className='input innput-bordered input-primary uppercase'
+					value={partialWord ? partialWord : ''}
+					placeholder='Start typing!'
+					autoComplete='off'
+					onChange={(e) => {
+						if (!e.target.value.match(/[^a-zA-Z]/)) {
+							setPartialWord(e.target.value)
+						}
+					}}
 				/>
 			</div>
 			<p id='wordHint'>{`The word is ${word}`}</p>
