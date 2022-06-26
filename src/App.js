@@ -7,7 +7,7 @@ import './index.css'
 
 function App() {
 	const [count, setCount] = useState(0)
-	const [secsPerRound, setSecsPerRound] = useState(50)
+	const [secsPerRound, setSecsPerRound] = useState(10)
 	const [secsRemaining, setSecsRemaining] = useState(secsPerRound)
 	const [gameStart, setGameStart] = useState(false)
 
