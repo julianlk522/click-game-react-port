@@ -13,7 +13,7 @@ function TimerArea({ secsRemaining }) {
 	return (
 		<div
 			id='timerArea'
-			className='m-16 w-1/2 flex justify-center items-center'
+			className='m-8 w-1/2 flex justify-center items-center'
 		>
 			<h3 id='timer' className='font-bold'>
 				{secsRemaining ? getTimeInMinsAndSecs(secsRemaining) : '0 : 00'}

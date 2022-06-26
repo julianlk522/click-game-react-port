@@ -6,6 +6,7 @@ import TimerArea from './TimerArea'
 function GameOver({
 	count,
 	secsPerRound,
+	setSecsPerRound,
 	secsRemaining,
 	setSecsRemaining,
 	setGameStart,
@@ -36,8 +37,6 @@ function GameOver({
 				...JSON.parse(localStorage.getItem(keys[i])),
 			})
 		}
-
-		console.log(values)
 		setHighscores(values)
 	}
 
@@ -48,13 +47,13 @@ function GameOver({
 	return (
 		<>
 			<div className='flex flex-col justify-center items-center'>
-				<h2 id='gameOver' className='text-3xl font-bold mb-16'>
+				<h2 id='gameOver' className='text-3xl font-bold my-8'>
 					Game over!
 				</h2>
-				<h3 className='text-2xl mb-24'>{`Your score was ${count}`}</h3>
+				<h3 className='my-8 text-2xl'>{`Your score was ${count}`}</h3>
 				<form
 					id='submissionInputForm'
-					className='p-8 m-8'
+					className='m-8'
 					onSubmit={(e) => {
 						e.preventDefault()
 						pushScoreToLocalStorage()
@@ -72,28 +71,40 @@ function GameOver({
 							setSubmissionName(e.target.value)
 						}}
 					/>
-					<button
-						id='submitScore'
-						className='btn btn-outline mx-4 scale-75'
-						type='submit'
-					>
+					<button id='submitScore' className='btn mx-4' type='submit'>
 						Save your score!
 					</button>
 				</form>
 				<TimerArea secsRemaining={secsRemaining} />
-				<button
-					id='replay'
-					className='btn btn-secondary'
-					onClick={(e) => {
-						e.preventDefault()
-						setCount(0)
-						setSecsRemaining(secsPerRound)
-						setGameStart(true)
-						navigate('/game')
-					}}
-				>
-					Play again?
-				</button>
+				<div id='replayContainer' className='flex justify-between m-8'>
+					<button
+						id='replay'
+						className='btn btn-secondary mx-4'
+						onClick={(e) => {
+							e.preventDefault()
+							setCount(0)
+							setSecsRemaining(secsPerRound)
+							setGameStart(true)
+							navigate('/game')
+						}}
+					>
+						Play again?
+					</button>
+					<select
+						className='select select-primary mx-4'
+						defaultValue=''
+						onChange={(e) =>
+							setSecsPerRound(e.target.value.slice(0, 2))
+						}
+					>
+						<option value='' disabled>
+							Select a different game duration?
+						</option>
+						<option value='1'>10s</option>
+						<option value='2'>20s</option>
+						<option value='3'>30s</option>
+					</select>
+				</div>
 			</div>
 			<Highscores highscores={highscores} submittedName={submittedName} />
 		</>

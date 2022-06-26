@@ -2,15 +2,17 @@ import React from 'react'
 
 function Highscores({ highscores, submittedName }) {
 	return (
-		<div id='scoreArea' className='pt-24'>
-			<h2 id='scoreTitle' className='m-8 text-2xl'>
+		<div id='scoreArea' className='flex flex-col justify-center'>
+			<h2 id='scoreTitle' className='mb-16 text-2xl font-semibold'>
 				High Scores:
 			</h2>
 			<ul id='scoreList'>
 				{highscores
 					? highscores
 							.sort((a, b) => {
-								if (a.score > b.score) return -1
+								if (a.time > b.time) return -1
+								if (a.time === b.time && a.score > b.score)
+									return -1
 								if (b.score > a.score) return 1
 								return 0
 							})

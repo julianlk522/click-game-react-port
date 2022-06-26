@@ -37,7 +37,7 @@ function App() {
 		>
 			<div
 				id='gameArea'
-				className='w-[95%] h-[90%] bg-darkViolet bg-opacity-90 text-yellow-100 rounded-3xl flex justify-evenly shadow-actuallyXl relative'
+				className='w-full h-[95%] m-[2.5%] p-24 bg-darkViolet bg-opacity-90 text-yellow-100 rounded-3xl flex justify-evenly shadow-actuallyXl relative'
 			>
 				<Router>
 					<Routes>
@@ -69,6 +69,7 @@ function App() {
 									setCount={setCount}
 									setGameStart={setGameStart}
 									secsPerRound={secsPerRound}
+									setSecsPerRound={setSecsPerRound}
 									secsRemaining={secsRemaining}
 									setSecsRemaining={setSecsRemaining}
 								/>
