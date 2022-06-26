@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Highscores from './Highscores'
 import TimerArea from './TimerArea'
@@ -13,6 +13,7 @@ function GameOver({
 }) {
 	const navigate = useNavigate()
 	const [submissionName, setSubmissionName] = useState('')
+	const [submittedName, setSubmittedName] = useState('')
 	const [highscores, setHighscores] = useState()
 
 	const pushScoreToLocalStorage = () => {
@@ -40,6 +41,10 @@ function GameOver({
 		setHighscores(values)
 	}
 
+	useEffect(() => {
+		getTopScoresFromStorage()
+	}, [])
+
 	return (
 		<>
 			<div className='flex flex-col justify-center items-center'>
@@ -54,6 +59,7 @@ function GameOver({
 						e.preventDefault()
 						pushScoreToLocalStorage()
 						getTopScoresFromStorage()
+						setSubmittedName(submissionName)
 					}}
 				>
 					<input
@@ -62,7 +68,9 @@ function GameOver({
 						className='w-48 mx-4 p-2 bg-none border-0 text-indigo-600 rounded-lg cursor-text text-sm'
 						placeholder='Name for your submission'
 						value={submissionName}
-						onChange={(e) => setSubmissionName(e.target.value)}
+						onChange={(e) => {
+							setSubmissionName(e.target.value)
+						}}
 					/>
 					<button
 						id='submitScore'
@@ -87,7 +95,7 @@ function GameOver({
 					Play again?
 				</button>
 			</div>
-			<Highscores highscores={highscores} />
+			<Highscores highscores={highscores} submittedName={submittedName} />
 		</>
 	)
 }

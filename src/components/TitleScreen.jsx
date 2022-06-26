@@ -34,10 +34,10 @@ function TitleScreen({ secsPerRound, setCount, setGameStart }) {
 		>
 			<div id='title'>
 				<h1 className='text-3xl font-bold m-16'>
-					Welcome to the Click Game!
+					Welcome to Type-tastrophe!
 				</h1>
 				<h2 id='subtitle' className='text-2xl mb-24'>
-					How many can you click before it's too late?
+					How many words can you type before it's too late?
 				</h2>
 			</div>
 			<div

@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Highscores({ highscores }) {
+function Highscores({ highscores, submittedName }) {
 	return (
 		<div id='scoreArea' className='pt-24'>
 			<h2 id='scoreTitle' className='m-8 text-2xl'>
@@ -16,10 +16,20 @@ function Highscores({ highscores }) {
 							})
 							.map((scoreObj, index) => {
 								return (
-									<li
-										className='list-none'
+									<div
+										className='flex justify-between'
 										key={index}
-									>{`${scoreObj.name}: ${scoreObj.score} points (${scoreObj.time} seconds)`}</li>
+									>
+										<li className='list-none w-32 flex'>{`${
+											scoreObj.name === submittedName
+												? scoreObj.name + ' 😎'
+												: scoreObj.name
+										}`}</li>
+
+										<li className='list-none ml-12 w-16'>{`${scoreObj.score} points`}</li>
+
+										<li className='list-none ml-12'>{`${scoreObj.time}s`}</li>
+									</div>
 								)
 							})
 					: 'None yet!'}
