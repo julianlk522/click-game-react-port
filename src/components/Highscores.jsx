@@ -7,7 +7,7 @@ function Highscores({ highscores, submittedName }) {
 				High Scores:
 			</h2>
 			<ul id='scoreList'>
-				{highscores
+				{highscores && highscores.length > 0
 					? highscores
 							.sort((a, b) => {
 								if (a.time > b.time) return -1

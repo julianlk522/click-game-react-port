@@ -11,6 +11,9 @@ module.exports = {
 			boxShadow: {
 				actuallyXl: '0 5px 15px rgba(0, 0, 0, 0.5)',
 			},
+			gridAutoRows: {
+				repeatAfter6: 'repeat(6, auto)',
+			},
 		},
 	},
 	plugins: [require('daisyui')],

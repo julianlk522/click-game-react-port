@@ -13,7 +13,11 @@ function GameScreen({ secsRemaining, count, setCount }) {
 	const [completedWords, setCompletedWords] = useState([])
 
 	const fetchNewWord = async () => {
-		const data = await fetch('https://random-word-api.herokuapp.com/word')
+		//	words between 4 and 8 letters long
+		let randomLength = Math.floor(Math.random() * 5 + 4)
+		const data = await fetch(
+			`https://random-word-api.herokuapp.com/word?length=${randomLength}`
+		)
 		const response = await data.json()
 		setWord(response[0])
 		console.log(response)
@@ -38,24 +42,38 @@ function GameScreen({ secsRemaining, count, setCount }) {
 	}, [secsRemaining, navigate])
 
 	return (
-		<>
-			<div className='flex flex-col items-center mt-12'>
-				<div id='gameTitle'>
-					<h2 className='text-2xl font-semibold m-16'>
-						Type, type for your life!
-					</h2>
-				</div>
-				<TimerArea secsRemaining={secsRemaining} />
+		<div
+			className='w-full flex flex-col items-center'
+			id='gameScreenContainer'
+			onClick={() => inputRef.current.focus()}
+		>
+			<div id='gameTitle'>
+				<h2 className='text-5xl font-semibold m-8'>
+					Type, type for your life!
+				</h2>
+			</div>
+			<hr className='m-8 w-4/5' />
+			<div className='w-full mt-16 flex justify-between' id='mainContent'>
 				<div
 					id='inputArea'
-					className='m-16 w-1/2 flex justify-center items-center'
+					className='px-8 w-1/2 flex flex-col justify-center items-center'
 				>
+					<TimerArea secsRemaining={secsRemaining} />
+					<p id='wordHint' className='my-8'>
+						The word is:
+						<span
+							id='coloredWord'
+							className='text-red-500 ml-4 uppercase'
+						>
+							{word}
+						</span>
+					</p>
 					<input
 						id='wordInput'
 						ref={inputRef}
-						className='input innput-bordered input-primary uppercase'
+						className='w-full my-8 input input-bordered uppercase'
 						value={partialWord ? partialWord : ''}
-						placeholder='Input goes here!'
+						placeholder='Click anywhere to focus me!'
 						autoComplete='off'
 						onChange={(e) => {
 							if (!e.target.value.match(/[^a-zA-Z]/)) {
@@ -64,26 +82,43 @@ function GameScreen({ secsRemaining, count, setCount }) {
 						}}
 					/>
 				</div>
-				<p id='wordHint'>{`The word is ${word}`}</p>
-			</div>
-			<div
-				id='completedWords'
-				className='flex flex-col items-center mt-12'
-			>
-				<h3 className='text-2xl font-semibold m-16 '>Completed:</h3>
-				<div id='wordsList' className='flex flex-col uppercase mt-12'>
-					{completedWords &&
-						completedWords.map((word, index) => {
-							return (
-								<div className='flex' key={index}>
-									<p>{word}</p>
-									<GiCheckMark className='text-lime-500 ml-4' />
-								</div>
-							)
-						})}
+				<div
+					id='completedWords'
+					className='h-full w-1/2 px-8 flex flex-col items-center'
+				>
+					<h3 className='text-2xl font-semibold m-8 '>Completed:</h3>
+					<div
+						id='wordsList'
+						className='flex flex-col flex-wrap uppercase gap-1 mt-12'
+					>
+						{completedWords && completedWords.length <= 10 ? (
+							completedWords.map((word, index) => {
+								return (
+									<div className='flex' key={index}>
+										<p>{word}</p>
+										<GiCheckMark className='text-lime-500 ml-4' />
+									</div>
+								)
+							})
+						) : (
+							<div
+								id='completedWordsGrid'
+								className='grid grid-cols-3 gap-x-8 gap-y-1'
+							>
+								{completedWords.map((word, index) => {
+									return (
+										<div className='flex' key={index}>
+											<p>{word}</p>
+											<GiCheckMark className='text-lime-500 ml-4' />
+										</div>
+									)
+								})}
+							</div>
+						)}
+					</div>
 				</div>
 			</div>
-		</>
+		</div>
 	)
 }
 
