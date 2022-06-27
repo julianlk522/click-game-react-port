@@ -20,7 +20,6 @@ function GameScreen({ secsRemaining, count, setCount }) {
 		)
 		const response = await data.json()
 		setWord(response[0])
-		console.log(response)
 		inputRef.current.focus()
 	}
 
@@ -37,9 +36,9 @@ function GameScreen({ secsRemaining, count, setCount }) {
 		}
 	}, [partialWord])
 
-	useEffect(() => {
-		!secsRemaining && navigate('/gameOver')
-	}, [secsRemaining, navigate])
+	// useEffect(() => {
+	// 	!secsRemaining && navigate('/gameOver')
+	// }, [secsRemaining, navigate])
 
 	return (
 		<div
@@ -48,7 +47,7 @@ function GameScreen({ secsRemaining, count, setCount }) {
 			onClick={() => inputRef.current.focus()}
 		>
 			<div id='gameTitle'>
-				<h2 className='text-5xl font-semibold m-8'>
+				<h2 className='sm:text-4xl md:text-5xl font-semibold m-8'>
 					Type, type for your life!
 				</h2>
 			</div>
@@ -56,7 +55,7 @@ function GameScreen({ secsRemaining, count, setCount }) {
 			<div className='w-full mt-16 flex justify-between' id='mainContent'>
 				<div
 					id='inputArea'
-					className='px-8 w-1/2 flex flex-col justify-center items-center'
+					className='px-8 sm:px-4 w-1/2 flex flex-col justify-center items-center'
 				>
 					<TimerArea secsRemaining={secsRemaining} />
 					<p id='wordHint' className='my-8'>
@@ -71,12 +70,23 @@ function GameScreen({ secsRemaining, count, setCount }) {
 					<input
 						id='wordInput'
 						ref={inputRef}
-						className='w-full my-8 input input-bordered uppercase'
+						className={`sm:text-[0.6rem] lg:text-base w-full my-8 input input-bordered uppercase ${
+							inputRef.current?.value &&
+							!word.startsWith(inputRef.current.value)
+								? 'text-red-500'
+								: 'text-lime-500'
+						}`}
 						value={partialWord ? partialWord : ''}
 						placeholder='Click anywhere to focus me!'
 						autoComplete='off'
 						onChange={(e) => {
-							if (!e.target.value.match(/[^a-zA-Z]/)) {
+							if (
+								(!e.target.value.match(/[^a-zA-Z]/) &&
+									word.startsWith(
+										inputRef.current.value.slice(0, -1)
+									)) ||
+								e.nativeEvent.data === null
+							) {
 								setPartialWord(e.target.value)
 							}
 						}}
@@ -91,7 +101,7 @@ function GameScreen({ secsRemaining, count, setCount }) {
 						id='wordsList'
 						className='flex flex-col flex-wrap uppercase gap-1 mt-12'
 					>
-						{completedWords && completedWords.length <= 10 ? (
+						{completedWords && completedWords.length <= 6 ? (
 							completedWords.map((word, index) => {
 								return (
 									<div className='flex' key={index}>
@@ -100,6 +110,20 @@ function GameScreen({ secsRemaining, count, setCount }) {
 									</div>
 								)
 							})
+						) : completedWords.length <= 12 ? (
+							<div
+								id='completedWordsGrid'
+								className='grid grid-cols-2 gap-x-8 gap-y-1'
+							>
+								{completedWords.map((word, index) => {
+									return (
+										<div className='flex' key={index}>
+											<p>{word}</p>
+											<GiCheckMark className='text-lime-500 ml-4' />
+										</div>
+									)
+								})}
+							</div>
 						) : (
 							<div
 								id='completedWordsGrid'

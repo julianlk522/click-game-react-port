@@ -6,7 +6,7 @@ function Highscores({ highscores, submittedName }) {
 			<h2 id='scoreTitle' className='mb-16 text-2xl font-semibold'>
 				High Scores:
 			</h2>
-			<ul id='scoreList'>
+			<ul id='scoreList' className='my-16'>
 				{highscores && highscores.length > 0
 					? highscores
 							.sort((a, b) => {
@@ -22,15 +22,15 @@ function Highscores({ highscores, submittedName }) {
 										className='flex justify-between'
 										key={index}
 									>
-										<li className='list-none w-32 flex'>{`${
+										<li className='sm:text-sm lg:text-base list-none w-32 flex'>{`${
 											scoreObj.name === submittedName
 												? scoreObj.name + ' 😎'
 												: scoreObj.name
 										}`}</li>
 
-										<li className='list-none ml-12 w-16'>{`${scoreObj.score} points`}</li>
+										<li className='sm:text-sm lg:text-base list-none ml-12 min-w-20'>{`${scoreObj.score} points`}</li>
 
-										<li className='list-none ml-12'>{`${scoreObj.time}s`}</li>
+										<li className='sm:text-sm lg:text-base list-none ml-12'>{`${scoreObj.time}s`}</li>
 									</div>
 								)
 							})

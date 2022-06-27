@@ -33,10 +33,10 @@ function TitleScreen({ secsPerRound, setCount, setGameStart }) {
 			className='flex flex-col justify-center items-center'
 		>
 			<div id='title'>
-				<h1 className='text-3xl font-bold m-16'>
+				<h1 className='text-3xl sm:text-2xl font-bold m-16'>
 					Welcome to Type-tastrophe!
 				</h1>
-				<h2 id='subtitle' className='text-2xl mb-24'>
+				<h2 id='subtitle' className='text-2xl sm:text-xl mb-24'>
 					How many words can you type before it's too late?
 				</h2>
 			</div>

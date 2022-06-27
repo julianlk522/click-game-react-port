@@ -14,10 +14,10 @@ function TimerArea({ secsRemaining }) {
 	return (
 		<div
 			id='timerArea'
-			className='p-4 m-8 w-1/2 flex justify-center items-center border-2 border-white border-opacity-25 rounded-sm'
+			className='p-4 md:m-4 lg:m-8 w-1/2 max-w-[10rem] flex sm:justify-between md:justify-evenly items-center border-2 border-white border-opacity-25 rounded-md'
 		>
-			<AiOutlineClockCircle className='mr-8 scale-125' />
-			<h3 id='timer' className='font-bold'>
+			<AiOutlineClockCircle className='scale-125 lg:mr-8' />
+			<h3 id='timer' className='font-bold min-w-fit'>
 				{secsRemaining ? getTimeInMinsAndSecs(secsRemaining) : '0 : 00'}
 			</h3>
 		</div>

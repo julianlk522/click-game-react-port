@@ -76,7 +76,11 @@ function GameOver({
 							setSubmissionName(e.target.value)
 						}}
 					/>
-					<button id='submitScore' className='btn mx-4' type='submit'>
+					<button
+						id='submitScore'
+						className='btn sm:mx-2 sm:mt-4 lg:mx-4 lg:mt-0'
+						type='submit'
+					>
 						Submit to high scores
 					</button>
 				</form>
@@ -88,12 +92,17 @@ function GameOver({
 						onClick={(e) => {
 							e.preventDefault()
 							setCount(0)
-							setSecsPerRound(
-								secondsRef.current.value.slice(0, 2)
-							)
-							setSecsRemaining(
-								secondsRef.current.value.slice(0, 2)
-							)
+							if (
+								secondsRef.current.value &&
+								secondsRef.current.value.length > 0
+							) {
+								setSecsPerRound(
+									secondsRef.current.value.slice(0, 2)
+								)
+								setSecsRemaining(
+									secondsRef.current.value.slice(0, 2)
+								)
+							}
 							setGameStart(true)
 							navigate('/game')
 						}}
