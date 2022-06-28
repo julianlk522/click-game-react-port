@@ -1,17 +1,14 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useContext, useRef } from 'react'
+import TypingContext from '../context/TypingContext'
 import { useNavigate } from 'react-router-dom'
 import Highscores from './Highscores'
 import TimerArea from './TimerArea'
 
-function GameOver({
-	count,
-	secsPerRound,
-	setSecsPerRound,
-	secsRemaining,
-	setSecsRemaining,
-	setGameStart,
-	setCount,
-}) {
+function GameOver() {
+	const { state, dispatch } = useContext(TypingContext)
+	const secondsPerRound = state.secondsPerRound
+	const secondsRemaining = state.secondsRemaining
+	const count = state.count
 	const navigate = useNavigate()
 	const secondsRef = useRef(null)
 	const [submissionName, setSubmissionName] = useState('')
@@ -22,7 +19,7 @@ function GameOver({
 		localStorage.setItem(
 			[submissionName],
 			JSON.stringify({
-				time: secsPerRound,
+				time: secondsPerRound,
 				score: count,
 			})
 		)
@@ -84,26 +81,34 @@ function GameOver({
 						Submit to high scores
 					</button>
 				</form>
-				<TimerArea secsRemaining={secsRemaining} />
+				<TimerArea secondsRemaining={secondsRemaining} />
 				<div id='replayContainer' className='flex justify-between m-8'>
 					<button
 						id='replay'
 						className='btn btn-secondary mx-4'
 						onClick={(e) => {
 							e.preventDefault()
-							setCount(0)
+							dispatch({ type: 'RESET_COUNT' })
 							if (
 								secondsRef.current.value &&
 								secondsRef.current.value.length > 0
 							) {
-								setSecsPerRound(
-									secondsRef.current.value.slice(0, 2)
-								)
-								setSecsRemaining(
-									secondsRef.current.value.slice(0, 2)
-								)
+								dispatch({
+									type: 'SET_SECONDS_PER_ROUND',
+									payload: secondsRef.current.value.slice(
+										0,
+										2
+									),
+								})
+								dispatch({
+									type: 'SET_SECONDS_REMAINING',
+									payload: secondsRef.current.value.slice(
+										0,
+										2
+									),
+								})
 							}
-							setGameStart(true)
+							dispatch({ type: 'START_GAME' })
 							navigate('/game')
 						}}
 					>

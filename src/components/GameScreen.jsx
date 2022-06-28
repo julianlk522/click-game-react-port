@@ -1,9 +1,13 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useContext, useRef } from 'react'
+import TypingContext from '../context/TypingContext'
 import { useNavigate } from 'react-router-dom'
 import { GiCheckMark } from 'react-icons/gi'
 import TimerArea from './TimerArea'
 
-function GameScreen({ secsRemaining, count, setCount }) {
+function GameScreen() {
+	const { state, dispatch } = useContext(TypingContext)
+	const secondsRemaining = state.secondsRemaining
+	const gameActive = state.gameActive
 	const navigate = useNavigate()
 
 	const inputRef = useRef(null)
@@ -23,7 +27,18 @@ function GameScreen({ secsRemaining, count, setCount }) {
 		inputRef.current.focus()
 	}
 
+	let timerTimeout
+	const countdownLoop = () => {
+		timerTimeout = setTimeout(() => {
+			dispatch({
+				type: 'DECREMENT_SECONDS_REMAINING',
+			})
+		}, 1000)
+		return
+	}
+
 	useEffect(() => {
+		dispatch({ type: 'START_GAME' })
 		fetchNewWord()
 	}, [])
 
@@ -31,14 +46,22 @@ function GameScreen({ secsRemaining, count, setCount }) {
 		if (word && partialWord === word) {
 			setPartialWord('')
 			setCompletedWords([...completedWords, word])
-			setCount((count) => count + 1)
+			dispatch({ type: 'INCREMENT_COUNT' })
 			fetchNewWord()
 		}
 	}, [partialWord])
 
-	// useEffect(() => {
-	// 	!secsRemaining && navigate('/gameOver')
-	// }, [secsRemaining, navigate])
+	useEffect(() => {
+		gameActive && secondsRemaining && countdownLoop()
+
+		if (!secondsRemaining) {
+			dispatch({ type: 'END_GAME' })
+			navigate('/gameOver')
+		}
+
+		return () => clearTimeout(timerTimeout)
+		// eslint-disable-next-line
+	}, [secondsRemaining, gameActive, timerTimeout])
 
 	return (
 		<div
@@ -51,13 +74,16 @@ function GameScreen({ secsRemaining, count, setCount }) {
 					Type, type for your life!
 				</h2>
 			</div>
-			<hr className='m-8 w-4/5' />
-			<div className='w-full mt-16 flex justify-between' id='mainContent'>
+			<hr className='sm:mt-4 m-8 w-4/5' />
+			<div
+				className='w-full flex sm:flex-col md:flex-row flex-grow sm:justify-evenly md:justify-between items-center'
+				id='mainContent'
+			>
 				<div
 					id='inputArea'
 					className='px-8 sm:px-4 w-1/2 flex flex-col justify-center items-center'
 				>
-					<TimerArea secsRemaining={secsRemaining} />
+					<TimerArea secondsRemaining={secondsRemaining} />
 					<p id='wordHint' className='my-8'>
 						The word is:
 						<span
@@ -70,7 +96,7 @@ function GameScreen({ secsRemaining, count, setCount }) {
 					<input
 						id='wordInput'
 						ref={inputRef}
-						className={`sm:text-[0.6rem] lg:text-base w-full my-8 input input-bordered uppercase ${
+						className={`sm:text-sm lg:text-base w-full md:my-8 input input-bordered uppercase ${
 							inputRef.current?.value &&
 							!word.startsWith(inputRef.current.value)
 								? 'text-red-500'
@@ -94,32 +120,34 @@ function GameScreen({ secsRemaining, count, setCount }) {
 				</div>
 				<div
 					id='completedWords'
-					className='h-full w-1/2 px-8 flex flex-col items-center'
+					className='sm:h-1/3 md:h-full md:w-1/2 xl:px-8 flex flex-col justify-center items-center sm:text-sm lg:text-base'
 				>
-					<h3 className='text-2xl font-semibold m-8 '>Completed:</h3>
+					<h3 className='sm:hidden md:block text-2xl font-semibold m-8'>
+						Completed:
+					</h3>
 					<div
 						id='wordsList'
-						className='flex flex-col flex-wrap uppercase gap-1 mt-12'
+						className='flex flex-col flex-wrap uppercase gap-1 md:mt-12'
 					>
 						{completedWords && completedWords.length <= 6 ? (
 							completedWords.map((word, index) => {
 								return (
 									<div className='flex' key={index}>
 										<p>{word}</p>
-										<GiCheckMark className='text-lime-500 ml-4' />
+										<GiCheckMark className='text-lime-500 sm:ml-2 lg:ml-4' />
 									</div>
 								)
 							})
 						) : completedWords.length <= 12 ? (
 							<div
 								id='completedWordsGrid'
-								className='grid grid-cols-2 gap-x-8 gap-y-1'
+								className='grid grid-cols-2 sm:gap-x-4 lg:gap-x-8 gap-y-1'
 							>
 								{completedWords.map((word, index) => {
 									return (
 										<div className='flex' key={index}>
 											<p>{word}</p>
-											<GiCheckMark className='text-lime-500 ml-4' />
+											<GiCheckMark className='text-lime-500 sm:ml-2 lg:ml-4' />
 										</div>
 									)
 								})}
@@ -127,13 +155,13 @@ function GameScreen({ secsRemaining, count, setCount }) {
 						) : (
 							<div
 								id='completedWordsGrid'
-								className='grid grid-cols-3 gap-x-8 gap-y-1'
+								className='grid grid-cols-3 sm:gap-x-4 lg:gap-x-8 gap-y-1'
 							>
 								{completedWords.map((word, index) => {
 									return (
 										<div className='flex' key={index}>
 											<p>{word}</p>
-											<GiCheckMark className='text-lime-500 ml-4' />
+											<GiCheckMark className='text-lime-500 sm:ml-2 lg:ml-4' />
 										</div>
 									)
 								})}

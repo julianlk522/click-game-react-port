@@ -1,7 +1,7 @@
 import React from 'react'
 import { AiOutlineClockCircle } from 'react-icons/ai'
 
-function TimerArea({ secsRemaining }) {
+function TimerArea({ secondsRemaining }) {
 	//  calc time in mins/secs and update html
 	const getTimeInMinsAndSecs = (gameTime) => {
 		let minutes = Math.floor(gameTime / 60)
@@ -14,11 +14,13 @@ function TimerArea({ secsRemaining }) {
 	return (
 		<div
 			id='timerArea'
-			className='p-4 md:m-4 lg:m-8 w-1/2 max-w-[10rem] flex sm:justify-between md:justify-evenly items-center border-2 border-white border-opacity-25 rounded-md'
+			className='p-4 md:my-8 w-1/2 max-w-[10rem] flex justify-evenly items-center border-2 border-white border-opacity-25 rounded-md'
 		>
 			<AiOutlineClockCircle className='scale-125 lg:mr-8' />
 			<h3 id='timer' className='font-bold min-w-fit'>
-				{secsRemaining ? getTimeInMinsAndSecs(secsRemaining) : '0 : 00'}
+				{secondsRemaining
+					? getTimeInMinsAndSecs(secondsRemaining)
+					: '0 : 00'}
 			</h3>
 		</div>
 	)

@@ -1,13 +1,16 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
+import TypingContext from '../context/TypingContext'
 
-function TitleScreen({ secsPerRound, setCount, setGameStart }) {
+function TitleScreen() {
+	const { state, dispatch } = useContext(TypingContext)
+	const secondsPerRound = state.secondsPerRound
 	const navigate = useNavigate()
 
 	// parse secsPerRound and return formatted string
 	const buildFormattedTimeString = () => {
-		let startingMinutes = Math.floor(secsPerRound / 60)
-		let startingSeconds = secsPerRound % 60
+		let startingMinutes = Math.floor(secondsPerRound / 60)
+		let startingSeconds = secondsPerRound % 60
 
 		const timeString = !startingMinutes
 			? startingSeconds === 1
@@ -45,7 +48,7 @@ function TitleScreen({ secsPerRound, setCount, setGameStart }) {
 				className='m-16 w-1/2 flex justify-center items-center'
 			>
 				<h3 id='timer'>{`${buildFormattedTimeString(
-					secsPerRound
+					secondsPerRound
 				)} until time is up!`}</h3>
 			</div>
 			<hr className='m-8 w-4/5' />
@@ -57,8 +60,7 @@ function TitleScreen({ secsPerRound, setCount, setGameStart }) {
 					id='startButton'
 					className='btn btn-secondary'
 					onClick={() => {
-						setCount(0)
-						setGameStart(true)
+						dispatch({ type: 'RESET_COUNT' })
 						navigate('/game')
 					}}
 				>
