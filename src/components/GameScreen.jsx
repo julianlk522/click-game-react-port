@@ -71,15 +71,17 @@ function GameScreen() {
 			id='gameScreenContainer'
 			onClick={() => inputRef.current.focus()}
 		>
-			<div id='gameTitle'>
-				<h2 className='sm:text-4xl md:text-5xl font-semibold m-8'>
-					Type, type for your life!
-				</h2>
-			</div>
+			<h2
+				className='sm:text-4xl md:text-5xl font-semibold m-8'
+				id='gameTitle'
+			>
+				Type, type for your life!
+			</h2>
 			<hr className='sm:mt-4 m-8 w-4/5' />
 			<div
 				className='w-full flex sm:flex-col md:flex-row flex-grow sm:justify-evenly md:justify-between items-center'
 				id='mainContent'
+				role='main'
 			>
 				<div
 					id='inputArea'
