@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext, useRef } from 'react'
 import TypingContext from '../context/TypingContext'
+import { wordList } from '../wordList'
 import { useNavigate } from 'react-router-dom'
 import { GiCheckMark } from 'react-icons/gi'
 import TimerArea from './TimerArea'
@@ -17,13 +18,13 @@ function GameScreen() {
 	const [completedWords, setCompletedWords] = useState([])
 
 	const fetchNewWord = async () => {
+		let randomIndex = Math.floor(Math.random() * wordList.length)
+		let randomWord = wordList[randomIndex]
 		//	words between 4 and 8 letters long
-		let randomLength = Math.floor(Math.random() * 5 + 4)
-		const data = await fetch(
-			`https://random-word-api.herokuapp.com/word?length=${randomLength}`
-		)
-		const response = await data.json()
-		setWord(response[0])
+		if (randomWord.length < 4 || randomWord.length > 8) {
+			return fetchNewWord()
+		}
+		setWord(randomWord)
 		inputRef.current.focus()
 	}
 
@@ -40,7 +41,7 @@ function GameScreen() {
 	useEffect(() => {
 		dispatch({ type: 'START_GAME' })
 		fetchNewWord()
-	}, [])
+	}, [dispatch])
 
 	useEffect(() => {
 		if (word && partialWord === word) {
@@ -49,15 +50,16 @@ function GameScreen() {
 			dispatch({ type: 'INCREMENT_COUNT' })
 			fetchNewWord()
 		}
+		// eslint-disable-next-line
 	}, [partialWord])
 
 	useEffect(() => {
 		gameActive && secondsRemaining && countdownLoop()
 
-		if (!secondsRemaining) {
-			dispatch({ type: 'END_GAME' })
-			navigate('/gameOver')
-		}
+		// if (!secondsRemaining) {
+		// 	dispatch({ type: 'END_GAME' })
+		// 	navigate('/gameOver')
+		// }
 
 		return () => clearTimeout(timerTimeout)
 		// eslint-disable-next-line
@@ -88,6 +90,7 @@ function GameScreen() {
 						The word is:
 						<span
 							id='coloredWord'
+							role='status'
 							className='text-red-500 ml-4 uppercase'
 						>
 							{word}
@@ -95,6 +98,7 @@ function GameScreen() {
 					</p>
 					<input
 						id='wordInput'
+						role='form'
 						ref={inputRef}
 						className={`sm:text-sm lg:text-base w-full md:my-8 input input-bordered uppercase ${
 							inputRef.current?.value &&
@@ -120,6 +124,7 @@ function GameScreen() {
 				</div>
 				<div
 					id='completedWords'
+					role='group'
 					className='sm:h-1/3 md:h-full md:w-1/2 xl:px-8 flex flex-col justify-center items-center sm:text-sm lg:text-base'
 				>
 					<h3 className='sm:hidden md:block text-2xl font-semibold m-8'>

@@ -1,10 +1,5 @@
 const typingReducer = (state, action) => {
 	switch (action.type) {
-		case 'SET_LOADING':
-			return {
-				...state,
-				loading: true,
-			}
 		case 'RESET_COUNT':
 			return {
 				...state,

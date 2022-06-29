@@ -10,17 +10,6 @@
 	font-family: 'Montserrat', sans-serif;
 }
 
-:root {
-	--darkIndigo: hsl(269, 100%, 20%);
-	--darkIndigoTransparent: rgba(49, 0, 102, 0.89);
-	--indigo: hsl(269, 100%, 35%);
-	/* rgb(86, 0, 179) */
-	--violet: hsl(269, 100%, 50%);
-	--lemonChiffon: hsl(51, 100%, 88%);
-	--gold: hsl(51, 100%, 50%);
-	--olive: hsl(60, 100%, 20%);
-}
-
 body,
 html,
 #root {

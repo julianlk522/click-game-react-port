@@ -1,13 +1,16 @@
 import TitleScreen from './TitleScreen.jsx'
 import { BrowserRouter as Router } from 'react-router-dom'
+import { ContextProvider } from '../context/TypingContext.js'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 test('start button appears and navigates to GameScreen', () => {
 	render(
-		<Router>
-			<TitleScreen />
-		</Router>
+		<ContextProvider>
+			<Router>
+				<TitleScreen />
+			</Router>
+		</ContextProvider>
 	)
 
 	userEvent.click(
@@ -15,6 +18,4 @@ test('start button appears and navigates to GameScreen', () => {
 	)
 
 	expect(window.location.href).toEqual('http://localhost/game')
-
-	screen.debug()
 })

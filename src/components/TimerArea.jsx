@@ -14,6 +14,7 @@ function TimerArea({ secondsRemaining }) {
 	return (
 		<div
 			id='timerArea'
+			role='timer'
 			className='p-4 md:my-8 w-1/2 max-w-[10rem] flex justify-evenly items-center border-2 border-white border-opacity-25 rounded-md'
 		>
 			<AiOutlineClockCircle className='scale-125 lg:mr-8' />
