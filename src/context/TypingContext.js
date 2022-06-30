@@ -6,8 +6,8 @@ const TypingContext = createContext()
 export const ContextProvider = ({ children }) => {
 	const initialState = {
 		gameActive: false,
-		secondsPerRound: 20,
-		secondsRemaining: 20,
+		secondsPerRound: 10,
+		secondsRemaining: 10,
 		count: 0,
 	}
 

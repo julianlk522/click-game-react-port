@@ -56,10 +56,10 @@ function GameScreen() {
 	useEffect(() => {
 		gameActive && secondsRemaining && countdownLoop()
 
-		// if (!secondsRemaining) {
-		// 	dispatch({ type: 'END_GAME' })
-		// 	navigate('/gameOver')
-		// }
+		if (!secondsRemaining) {
+			dispatch({ type: 'END_GAME' })
+			navigate('/gameOver')
+		}
 
 		return () => clearTimeout(timerTimeout)
 		// eslint-disable-next-line

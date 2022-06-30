@@ -48,7 +48,10 @@ function GameOver() {
 				<h2 id='gameOver' className='text-3xl font-bold my-8'>
 					Game over!
 				</h2>
-				<h3 className='my-8 text-2xl'>{`Your score was ${count}`}</h3>
+				<h3
+					id='scoreTotal'
+					className='my-8 text-2xl'
+				>{`Your score was ${count}`}</h3>
 				<form
 					id='submissionInputForm'
 					className='m-8'
@@ -118,6 +121,7 @@ function GameOver() {
 						className='select select-primary mx-4'
 						defaultValue=''
 						ref={secondsRef}
+						id='gameTimeSelect'
 					>
 						<option value='' disabled>
 							Select a different game duration
