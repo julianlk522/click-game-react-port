@@ -47,9 +47,7 @@ function TitleScreen() {
 				id='timerArea'
 				className='m-16 w-1/2 flex justify-center items-center'
 			>
-				<h3 id='timer'>{`${buildFormattedTimeString(
-					secondsPerRound
-				)} until time is up!`}</h3>
+				<h3 id='timer'>{`${buildFormattedTimeString()} until time is up!`}</h3>
 			</div>
 			<hr className='m-8 w-4/5' />
 			<div
