@@ -1,6 +1,6 @@
 // word list found at https://github.com/bevacqua/correcthorse and used with permission
 
-export const wordList = [
+export const wordList: string[] = [
 	'a',
 	'ability',
 	'able',

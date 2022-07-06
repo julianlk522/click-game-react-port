@@ -24,7 +24,8 @@
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"cypress": "cypress open",
-		"eject": "react-scripts eject"
+		"eject": "react-scripts eject",
+		"tsc": "tsc"
 	},
 	"eslintConfig": {
 		"extends": [

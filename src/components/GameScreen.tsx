@@ -5,19 +5,19 @@ import { useNavigate } from 'react-router-dom'
 import { GiCheckMark } from 'react-icons/gi'
 import TimerArea from './TimerArea'
 
-function GameScreen() {
+const GameScreen: React.FC<any> = () => {
 	const { state, dispatch } = useContext(TypingContext)
 	const secondsRemaining = state.secondsRemaining
 	const gameActive = state.gameActive
 	const navigate = useNavigate()
 
-	const inputRef = useRef(null)
+	const inputRef = useRef<HTMLInputElement | null>(null)
 
-	const [word, setWord] = useState('')
-	const [partialWord, setPartialWord] = useState('')
-	const [completedWords, setCompletedWords] = useState([])
+	const [word, setWord] = useState<string>('')
+	const [partialWord, setPartialWord] = useState<string>('')
+	const [completedWords, setCompletedWords] = useState<string[]>([])
 
-	const fetchNewWord = async () => {
+	const fetchNewWord = (): void => {
 		let randomIndex = Math.floor(Math.random() * wordList.length)
 		let randomWord = wordList[randomIndex]
 		//	words between 4 and 8 letters long
@@ -25,10 +25,10 @@ function GameScreen() {
 			return fetchNewWord()
 		}
 		setWord(randomWord)
-		inputRef.current.focus()
+		inputRef?.current?.focus()
 	}
 
-	let timerTimeout
+	let timerTimeout: NodeJS.Timeout | number = 0
 	const countdownLoop = () => {
 		timerTimeout = setTimeout(() => {
 			dispatch({
@@ -69,7 +69,7 @@ function GameScreen() {
 		<div
 			className='w-full flex flex-col items-center'
 			id='gameScreenContainer'
-			onClick={() => inputRef.current.focus()}
+			onClick={() => inputRef?.current?.focus()}
 		>
 			<h2
 				className='sm:text-4xl md:text-5xl font-semibold m-8'
@@ -111,13 +111,14 @@ function GameScreen() {
 						value={partialWord ? partialWord : ''}
 						placeholder='Click anywhere to focus me!'
 						autoComplete='off'
-						onChange={(e) => {
+						onChange={(e: any) => {
 							if (
-								(!e.target.value.match(/[^a-zA-Z]/) &&
+								(!e?.target?.value?.match(/[^a-zA-Z]/) &&
+									inputRef?.current?.value &&
 									word.startsWith(
-										inputRef.current.value.slice(0, -1)
+										inputRef?.current?.value?.slice(0, -1)
 									)) ||
-								e.nativeEvent.data === null
+								e.nativeEvent?.target === null
 							) {
 								setPartialWord(e.target.value)
 							}

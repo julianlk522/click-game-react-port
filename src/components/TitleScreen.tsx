@@ -2,17 +2,17 @@ import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import TypingContext from '../context/TypingContext'
 
-function TitleScreen() {
+const TitleScreen: React.FC<any> = () => {
 	const { state, dispatch } = useContext(TypingContext)
-	const secondsPerRound = state.secondsPerRound
+	const secondsPerRound: number = state.secondsPerRound
 	const navigate = useNavigate()
 
 	// parse secsPerRound and return formatted string
-	const buildFormattedTimeString = () => {
-		let startingMinutes = Math.floor(secondsPerRound / 60)
-		let startingSeconds = secondsPerRound % 60
+	const buildFormattedTimeString = (): string => {
+		let startingMinutes: number = Math.floor(secondsPerRound / 60)
+		let startingSeconds: number = secondsPerRound % 60
 
-		const timeString = !startingMinutes
+		const timeString: string = !startingMinutes
 			? startingSeconds === 1
 				? '1 second'
 				: `${startingSeconds} seconds`
