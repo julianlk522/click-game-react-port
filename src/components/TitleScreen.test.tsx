@@ -1,6 +1,6 @@
-import TitleScreen from './TitleScreen.jsx'
+import TitleScreen from './TitleScreen'
 import { BrowserRouter as Router } from 'react-router-dom'
-import { ContextProvider } from '../context/TypingContext.js'
+import { ContextProvider } from '../context/TypingContext'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 

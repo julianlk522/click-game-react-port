@@ -1,7 +1,7 @@
 import React from 'react'
-import GameScreen from './GameScreen.jsx'
+import GameScreen from './GameScreen'
 import { BrowserRouter as Router } from 'react-router-dom'
-import { ContextProvider } from '../context/TypingContext.js'
+import { ContextProvider } from '../context/TypingContext'
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -38,15 +38,11 @@ describe('newly-typed word', () => {
 	test.todo(
 		'it will cause the previous word to be replaced and the wordHint text to update',
 		async () => {
-			jest.spyOn(React, 'useEffect').mockImplementation((f) => f())
-
 			userEvent.click(screen.getByRole('main'))
-			let firstWord = screen.getByRole('status').textContent
-			userEvent.type(firstWord)
+			let firstWord: string = screen.getByRole('status').textContent ?? ''
+			userEvent.type(screen.getByRole('main'), firstWord)
 
-			await expect(screen.getByRole('status')).not.toHaveTextContent(
-				firstWord
-			)
+			expect(screen.getByRole('status')).not.toHaveTextContent(firstWord)
 		}
 	)
 })
