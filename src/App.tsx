@@ -1,8 +1,8 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { ContextProvider } from './context/TypingContext.js'
+import { ContextProvider } from './context/TypingContext'
 import GameScreen from './components/GameScreen'
-import GameOver from './components/GameOver.jsx'
+import GameOver from './components/GameOver'
 import TitleScreen from './components/TitleScreen'
 import './index.css'
 

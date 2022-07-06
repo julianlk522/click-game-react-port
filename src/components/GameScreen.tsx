@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useContext, useRef } from 'react'
+import React, {
+	useEffect,
+	useState,
+	useContext,
+	useRef,
+	ChangeEvent,
+} from 'react'
 import TypingContext from '../context/TypingContext'
 import { wordList } from '../wordList'
 import { useNavigate } from 'react-router-dom'
@@ -111,14 +117,14 @@ const GameScreen: React.FC<any> = () => {
 						value={partialWord ? partialWord : ''}
 						placeholder='Click anywhere to focus me!'
 						autoComplete='off'
-						onChange={(e: any) => {
+						onChange={(e: ChangeEvent<HTMLInputElement>) => {
 							if (
-								(!e?.target?.value?.match(/[^a-zA-Z]/) &&
-									inputRef?.current?.value &&
-									word.startsWith(
-										inputRef?.current?.value?.slice(0, -1)
-									)) ||
-								e.nativeEvent?.target === null
+								// typed char is a letter
+								!e.target.value?.match(/[^a-zA-Z]/) &&
+								// word starts with typed string
+								word.startsWith(
+									inputRef?.current?.value?.slice(0, -1) ?? ''
+								)
 							) {
 								setPartialWord(e.target.value)
 							}

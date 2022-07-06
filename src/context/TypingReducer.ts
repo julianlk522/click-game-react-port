@@ -1,4 +1,21 @@
-const typingReducer = (state, action) => {
+export type AppState = {
+	gameActive: boolean
+	secondsPerRound: number
+	secondsRemaining: number
+	count: number
+}
+
+export type Action =
+	| { type: 'RESET_COUNT' }
+	| { type: 'INCREMENT_COUNT' }
+	| { type: 'START_GAME' }
+	| { type: 'END_GAME' }
+	| { type: 'SET_SECONDS_PER_ROUND'; payload: number }
+	| { type: 'SET_SECONDS_REMAINING'; payload: number }
+	| { type: 'DECREMENT_SECONDS_REMAINING' }
+	| { type: 'DEFAULT' }
+
+const typingReducer = (state: AppState, action: Action) => {
 	switch (action.type) {
 		case 'RESET_COUNT':
 			return {

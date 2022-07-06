@@ -1,11 +1,15 @@
 import React from 'react'
 import { AiOutlineClockCircle } from 'react-icons/ai'
 
-function TimerArea({ secondsRemaining }) {
+interface TimerAreaProps {
+	secondsRemaining: number
+}
+
+function TimerArea({ secondsRemaining }: TimerAreaProps) {
 	//  calc time in mins/secs and update html
-	const getTimeInMinsAndSecs = (gameTime) => {
+	const getTimeInMinsAndSecs = (gameTime: number): string => {
 		let minutes = Math.floor(gameTime / 60)
-		let seconds = gameTime % 60
+		let seconds: number | string = gameTime % 60
 		seconds = seconds < 10 ? '0' + seconds : seconds
 
 		return `${minutes} : ${seconds}`

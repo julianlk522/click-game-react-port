@@ -8,16 +8,26 @@ function GameOver() {
 	const { state, dispatch } = useContext(TypingContext)
 	const secondsPerRound = state.secondsPerRound
 	const secondsRemaining = state.secondsRemaining
+	const secondsRef = useRef<HTMLSelectElement | null>(null)
 	const count = state.count
-	const navigate = useNavigate()
-	const secondsRef = useRef(null)
-	const [submissionName, setSubmissionName] = useState('')
-	const [submittedName, setSubmittedName] = useState('')
-	const [highscores, setHighscores] = useState()
 
-	const pushScoreToLocalStorage = () => {
+	const navigate = useNavigate()
+
+	// highscores state
+	const [submissionName, setSubmissionName] = useState<string>('')
+	const [submittedName, setSubmittedName] = useState<string>('')
+	const [highscores, setHighscores] = useState<
+		| {
+				name: string
+				score: number
+				time: number
+		  }[]
+		| null
+	>(null)
+
+	const pushScoreToLocalStorage = (): void => {
 		localStorage.setItem(
-			[submissionName],
+			submissionName,
 			JSON.stringify({
 				time: secondsPerRound,
 				score: count,
@@ -26,18 +36,35 @@ function GameOver() {
 	}
 
 	const getTopScoresFromStorage = () => {
-		let values = []
+		let values: any[] = []
 		let keys = Object.keys(localStorage)
 
-		for (let i = 0; i < keys.length; i++) {
-			values.push({
-				name: keys[i],
-				...JSON.parse(localStorage.getItem(keys[i])),
-			})
+		if (keys.length > 3) {
+			for (let i = 0; i < 3; i++) {
+				const scoreData: object = JSON.parse(
+					localStorage?.getItem(keys[i]) ?? ''
+				)
+				values.push({
+					name: keys[i],
+					...scoreData,
+				})
+			}
+			setHighscores(values)
+		} else {
+			for (let i = 0; i < keys.length; i++) {
+				const scoreData: object = JSON.parse(
+					localStorage.getItem(keys[i]) ?? ''
+				)
+				values.push({
+					name: keys[i],
+					...scoreData,
+				})
+			}
+			setHighscores(values)
 		}
-		setHighscores(values)
 	}
 
+	//	retrieve highscores on load
 	useEffect(() => {
 		getTopScoresFromStorage()
 	}, [])
@@ -45,13 +72,18 @@ function GameOver() {
 	return (
 		<>
 			<div className='flex flex-col justify-center items-center'>
+				{/* title */}
 				<h2 id='gameOver' className='text-3xl font-bold my-8'>
 					Game over!
 				</h2>
+
+				{/* total score */}
 				<h3
 					id='scoreTotal'
 					className='my-8 text-2xl'
 				>{`Your score was ${count}`}</h3>
+
+				{/* submit score input form */}
 				<form
 					id='submissionInputForm'
 					className='m-8'
@@ -84,7 +116,11 @@ function GameOver() {
 						Submit to high scores
 					</button>
 				</form>
+
+				{/* timer */}
 				<TimerArea secondsRemaining={secondsRemaining} />
+
+				{/* play again */}
 				<div id='replayContainer' className='flex justify-between m-8'>
 					<button
 						id='replay'
@@ -93,22 +129,25 @@ function GameOver() {
 							e.preventDefault()
 							dispatch({ type: 'RESET_COUNT' })
 							if (
-								secondsRef.current.value &&
-								secondsRef.current.value.length > 0
+								secondsRef?.current?.value &&
+								secondsRef?.current?.value?.length > 0
 							) {
 								dispatch({
 									type: 'SET_SECONDS_PER_ROUND',
-									payload: secondsRef.current.value.slice(
-										0,
-										2
+									payload: parseInt(
+										secondsRef.current.value.slice(0, 2)
 									),
 								})
 								dispatch({
 									type: 'SET_SECONDS_REMAINING',
-									payload: secondsRef.current.value.slice(
-										0,
-										2
+									payload: parseInt(
+										secondsRef.current.value.slice(0, 2)
 									),
+								})
+							} else {
+								dispatch({
+									type: 'SET_SECONDS_REMAINING',
+									payload: secondsPerRound,
 								})
 							}
 							dispatch({ type: 'START_GAME' })
@@ -117,6 +156,8 @@ function GameOver() {
 					>
 						Play again
 					</button>
+
+					{/* pick game duration select */}
 					<select
 						className='select select-primary mx-4'
 						defaultValue=''

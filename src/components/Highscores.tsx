@@ -1,6 +1,17 @@
 import React from 'react'
 
-function Highscores({ highscores, submittedName }) {
+interface HighscoresProps {
+	highscores:
+		| {
+				name: string
+				score: number
+				time: number
+		  }[]
+		| null
+	submittedName: string
+}
+
+function Highscores({ highscores, submittedName }: HighscoresProps) {
 	return (
 		<div id='scoreArea' className='flex flex-col justify-center'>
 			<h2 id='scoreTitle' className='mb-16 text-2xl font-semibold'>
