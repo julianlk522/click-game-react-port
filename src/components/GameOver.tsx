@@ -8,10 +8,10 @@ function GameOver() {
 	const { state, dispatch } = useContext(TypingContext)
 	const secondsPerRound = state.secondsPerRound
 	const secondsRemaining = state.secondsRemaining
-	const secondsRef = useRef<HTMLSelectElement | null>(null)
 	const count = state.count
 	const wpm = state.wpm
 
+	const secondsRef = useRef<HTMLSelectElement | null>(null)
 	const navigate = useNavigate()
 
 	// highscores state
@@ -38,13 +38,26 @@ function GameOver() {
 		)
 	}
 
+	type ScoreValues = {
+		name: string
+		score: number
+		time: number
+		wpm: number
+	}
+
+	type LocalStorageData = {
+		score: number
+		time: number
+		wpm: number
+	}
+
 	const getTopScoresFromStorage = () => {
-		let values: any[] = []
+		let values: ScoreValues[] = []
 		let keys = Object.keys(localStorage)
 
-		if (keys.length > 3) {
-			for (let i = 0; i < 3; i++) {
-				const scoreData: object = JSON.parse(
+		if (keys.length > 5) {
+			for (let i = 0; i < 5; i++) {
+				const scoreData: LocalStorageData = JSON.parse(
 					localStorage?.getItem(keys[i]) ?? ''
 				)
 				keys[i] !== 'user' &&
@@ -56,7 +69,7 @@ function GameOver() {
 			setHighscores(values)
 		} else {
 			for (let i = 0; i < keys.length; i++) {
-				const scoreData: object = JSON.parse(
+				const scoreData: LocalStorageData = JSON.parse(
 					localStorage.getItem(keys[i]) ?? ''
 				)
 				values.push({
@@ -82,8 +95,14 @@ function GameOver() {
 				</h2>
 
 				{/* total score */}
-				<h3 id='scoreTotal' className='my-8 text-2xl'>
-					{`Your score was ${count}`}
+				<h3 id='scoreDescription' className='my-8 text-2xl'>
+					Your score was
+					<span
+						id='finalScore'
+						className='ml-8 text-3xl text-red-500'
+					>
+						{count}
+					</span>
 					<span id='finalWpm' className='ml-8'>
 						({wpm.toFixed(1)} WPM)
 					</span>
