@@ -1,11 +1,16 @@
 import React from 'react'
+import { useContext } from 'react'
 import { AiOutlineClockCircle } from 'react-icons/ai'
+import TypingContext from '../context/TypingContext'
 
 interface TimerAreaProps {
 	secondsRemaining: number
 }
 
 function TimerArea({ secondsRemaining }: TimerAreaProps) {
+	const { state } = useContext(TypingContext)
+	const gameActive = state.gameActive
+
 	//  calc time in mins/secs and update html
 	const getTimeInMinsAndSecs = (gameTime: number): string => {
 		let minutes = Math.floor(gameTime / 60)
@@ -25,7 +30,7 @@ function TimerArea({ secondsRemaining }: TimerAreaProps) {
 			<h3
 				id='timer'
 				className={`font-bold min-w-fit ${
-					secondsRemaining <= 5 && 'text-red-500'
+					gameActive && secondsRemaining <= 5 && 'text-red-500'
 				}`}
 			>
 				{secondsRemaining

@@ -10,6 +10,7 @@ const initialState = {
 	secondsPerRound: 20,
 	secondsRemaining: 20,
 	count: 0,
+	wpm: 0,
 }
 
 const TypingContext = createContext<{

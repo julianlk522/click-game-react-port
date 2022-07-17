@@ -5,6 +5,7 @@ interface HighscoresProps {
 		| {
 				name: string
 				score: number
+				wpm: number
 				time: number
 		  }[]
 		| null
@@ -40,6 +41,10 @@ function Highscores({ highscores, submittedName }: HighscoresProps) {
 										}`}</li>
 
 										<li className='sm:text-sm lg:text-base list-none ml-12 min-w-20'>{`${scoreObj.score} points`}</li>
+
+										<li className='sm:text-sm lg:text-base list-none ml-12 min-w-20'>{`${Math.floor(
+											scoreObj.wpm
+										)} WPM`}</li>
 
 										<li className='sm:text-sm lg:text-base list-none ml-12'>{`${scoreObj.time}s`}</li>
 									</div>

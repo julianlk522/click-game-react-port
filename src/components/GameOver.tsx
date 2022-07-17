@@ -10,6 +10,7 @@ function GameOver() {
 	const secondsRemaining = state.secondsRemaining
 	const secondsRef = useRef<HTMLSelectElement | null>(null)
 	const count = state.count
+	const wpm = state.wpm
 
 	const navigate = useNavigate()
 
@@ -20,6 +21,7 @@ function GameOver() {
 		| {
 				name: string
 				score: number
+				wpm: number
 				time: number
 		  }[]
 		| null
@@ -31,6 +33,7 @@ function GameOver() {
 			JSON.stringify({
 				time: secondsPerRound,
 				score: count,
+				wpm: wpm,
 			})
 		)
 	}
@@ -79,10 +82,12 @@ function GameOver() {
 				</h2>
 
 				{/* total score */}
-				<h3
-					id='scoreTotal'
-					className='my-8 text-2xl'
-				>{`Your score was ${count}`}</h3>
+				<h3 id='scoreTotal' className='my-8 text-2xl'>
+					{`Your score was ${count}`}
+					<span id='finalWpm' className='ml-8'>
+						({wpm.toFixed(1)} WPM)
+					</span>
+				</h3>
 
 				{/* submit score input form */}
 				<form

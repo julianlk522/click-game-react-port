@@ -49,7 +49,7 @@ const GameScreen: React.FC<any> = () => {
 		return
 	}
 
-	const calcWordsPerMinute = (successfulKeyStrokes: number) => {
+	const calcWordsPerMinute = (successfulKeyStrokes: number): number => {
 		const secondsPassed = secondsPerRound - secondsRemaining
 		const wordsTypedEstimate = successfulKeyStrokes / 5
 		const wordsPerSecond = wordsTypedEstimate / secondsPassed
@@ -76,10 +76,16 @@ const GameScreen: React.FC<any> = () => {
 	useEffect(() => {
 		gameActive && secondsRemaining && countdownLoop()
 
-		// if (!secondsRemaining) {
-		// 	dispatch({ type: 'END_GAME' })
-		// 	navigate('/gameOver')
-		// }
+		if (!secondsRemaining) {
+			dispatch({
+				type: 'SET_WPM',
+				payload: successfulKeyStrokes
+					? calcWordsPerMinute(successfulKeyStrokes)
+					: 0,
+			})
+			dispatch({ type: 'END_GAME' })
+			navigate('/gameOver')
+		}
 
 		return () => clearTimeout(timerTimeout)
 		// eslint-disable-next-line

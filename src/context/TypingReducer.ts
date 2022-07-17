@@ -3,6 +3,7 @@ export type AppState = {
 	secondsPerRound: number
 	secondsRemaining: number
 	count: number
+	wpm: number
 }
 
 export type Action =
@@ -13,6 +14,7 @@ export type Action =
 	| { type: 'SET_SECONDS_PER_ROUND'; payload: number }
 	| { type: 'SET_SECONDS_REMAINING'; payload: number }
 	| { type: 'DECREMENT_SECONDS_REMAINING' }
+	| { type: 'SET_WPM'; payload: number }
 	| { type: 'DEFAULT' }
 
 const typingReducer = (state: AppState, action: Action) => {
@@ -51,6 +53,11 @@ const typingReducer = (state: AppState, action: Action) => {
 			return {
 				...state,
 				secondsRemaining: state.secondsRemaining - 1,
+			}
+		case 'SET_WPM':
+			return {
+				...state,
+				wpm: action.payload,
 			}
 		default:
 			return {
