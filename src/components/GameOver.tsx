@@ -44,10 +44,11 @@ function GameOver() {
 				const scoreData: object = JSON.parse(
 					localStorage?.getItem(keys[i]) ?? ''
 				)
-				values.push({
-					name: keys[i],
-					...scoreData,
-				})
+				keys[i] !== 'user' &&
+					values.push({
+						name: keys[i],
+						...scoreData,
+					})
 			}
 			setHighscores(values)
 		} else {

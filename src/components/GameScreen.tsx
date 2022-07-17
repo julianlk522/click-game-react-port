@@ -4,6 +4,7 @@ import React, {
 	useContext,
 	useRef,
 	ChangeEvent,
+	KeyboardEvent,
 } from 'react'
 import TypingContext from '../context/TypingContext'
 import { wordList } from '../wordList'
@@ -13,6 +14,7 @@ import TimerArea from './TimerArea'
 
 const GameScreen: React.FC<any> = () => {
 	const { state, dispatch } = useContext(TypingContext)
+	const secondsPerRound = state.secondsPerRound
 	const secondsRemaining = state.secondsRemaining
 	const gameActive = state.gameActive
 	const navigate = useNavigate()
@@ -22,6 +24,9 @@ const GameScreen: React.FC<any> = () => {
 	const [word, setWord] = useState<string>('')
 	const [partialWord, setPartialWord] = useState<string>('')
 	const [completedWords, setCompletedWords] = useState<string[]>([])
+	const [successfulKeyStrokes, setSuccessfulKeyStrokes] = useState<
+		number | null
+	>(null)
 
 	const fetchNewWord = (): void => {
 		let randomIndex = Math.floor(Math.random() * wordList.length)
@@ -44,9 +49,18 @@ const GameScreen: React.FC<any> = () => {
 		return
 	}
 
+	const calcWordsPerMinute = (successfulKeyStrokes: number) => {
+		const secondsPassed = secondsPerRound - secondsRemaining
+		const wordsTypedEstimate = successfulKeyStrokes / 5
+		const wordsPerSecond = wordsTypedEstimate / secondsPassed
+		const wordsPerMinute = wordsPerSecond * 60
+		return wordsPerMinute
+	}
+
 	useEffect(() => {
 		dispatch({ type: 'START_GAME' })
 		fetchNewWord()
+		// eslint-disable-next-line
 	}, [dispatch])
 
 	useEffect(() => {
@@ -62,10 +76,10 @@ const GameScreen: React.FC<any> = () => {
 	useEffect(() => {
 		gameActive && secondsRemaining && countdownLoop()
 
-		if (!secondsRemaining) {
-			dispatch({ type: 'END_GAME' })
-			navigate('/gameOver')
-		}
+		// if (!secondsRemaining) {
+		// 	dispatch({ type: 'END_GAME' })
+		// 	navigate('/gameOver')
+		// }
 
 		return () => clearTimeout(timerTimeout)
 		// eslint-disable-next-line
@@ -91,10 +105,9 @@ const GameScreen: React.FC<any> = () => {
 			>
 				<div
 					id='inputArea'
-					className='px-8 sm:px-4 w-1/2 flex flex-col justify-center items-center'
+					className='px-8 sm:px-4 w-1/2 h-full flex flex-col justify-evenly items-center'
 				>
-					<TimerArea secondsRemaining={secondsRemaining} />
-					<p id='wordHint' className='my-8'>
+					<p id='wordHint' className='my-8 text-2xl'>
 						The word is:
 						<span
 							id='coloredWord'
@@ -104,40 +117,71 @@ const GameScreen: React.FC<any> = () => {
 							{word}
 						</span>
 					</p>
-					<input
-						id='wordInput'
-						role='form'
-						ref={inputRef}
-						className={`sm:text-sm lg:text-base w-full md:my-8 input input-bordered uppercase ${
-							inputRef.current?.value &&
-							!word.startsWith(inputRef.current.value)
-								? 'text-red-500'
-								: 'text-lime-500'
-						}`}
-						value={partialWord ? partialWord : ''}
-						placeholder='Click anywhere to focus me!'
-						autoComplete='off'
-						onChange={(e: ChangeEvent<HTMLInputElement>) => {
-							if (
-								// typed char is a letter
-								!e.target.value?.match(/[^a-zA-Z]/) &&
-								// word starts with typed string
-								word.startsWith(
-									inputRef?.current?.value?.slice(0, -1) ?? ''
-								)
-							) {
-								setPartialWord(e.target.value)
-							}
-						}}
-					/>
+					<div id='wordInputContainer' className='w-full'>
+						<input
+							id='wordInput'
+							role='form'
+							ref={inputRef}
+							className={`sm:text-sm lg:text-base w-full md:my-8 input input-bordered uppercase ${
+								inputRef.current?.value &&
+								!word.startsWith(inputRef.current.value)
+									? 'text-red-500'
+									: 'text-lime-500'
+							}`}
+							value={partialWord}
+							placeholder='Click anywhere to focus me!'
+							autoComplete='off'
+							onChange={(e: ChangeEvent<HTMLInputElement>) => {
+								if (
+									// typed char is a letter
+									!e.target.value?.match(/[^a-zA-Z]/) &&
+									// word starts with typed string
+									word.startsWith(
+										inputRef?.current?.value?.slice(
+											0,
+											-1
+										) ?? ''
+									)
+								) {
+									setPartialWord(e.target.value)
+								}
+							}}
+							onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+								if (
+									e.key.match(/[a-zA-Z]/) &&
+									word.startsWith(
+										inputRef?.current?.value?.concat(
+											e.key
+										) ?? ''
+									)
+								) {
+									setSuccessfulKeyStrokes(
+										successfulKeyStrokes !== null
+											? successfulKeyStrokes + 1
+											: 1
+									)
+								}
+							}}
+						/>
+						<p id='wpmIndicator' className='my-4'>
+							Your WPM:
+							<span id='wpm' className='ml-2'>
+								{successfulKeyStrokes
+									? calcWordsPerMinute(
+											successfulKeyStrokes
+									  ).toFixed(1)
+									: 0}
+							</span>
+						</p>
+					</div>
 				</div>
 				<div
 					id='completedWords'
 					role='group'
-					className='sm:h-1/3 md:h-full md:w-1/2 xl:px-8 flex flex-col justify-center items-center sm:text-sm lg:text-base'
+					className='sm:h-1/3 md:h-full md:w-1/2 xl:px-8 flex flex-col sm:justify-center md:justify-evenly items-center sm:text-sm lg:text-base'
 				>
 					<h3 className='sm:hidden md:block text-2xl font-semibold m-8'>
-						Completed:
+						Completed Words:
 					</h3>
 					<div
 						id='wordsList'
@@ -182,6 +226,7 @@ const GameScreen: React.FC<any> = () => {
 							</div>
 						)}
 					</div>
+					<TimerArea secondsRemaining={secondsRemaining} />
 				</div>
 			</div>
 		</div>
