@@ -14,35 +14,27 @@ function GameOver() {
 	const secondsRef = useRef<HTMLSelectElement | null>(null)
 	const navigate = useNavigate()
 
-	// highscores state
-	const [submissionName, setSubmissionName] = useState<string>('')
+	// local highscores state
+	type ScoreValues = {
+		name: string
+		score: number
+		time: number
+		wpm: number
+	}
+
+	const [toBeSubmittedName, setToBeSubmittedName] = useState<string>('')
 	const [submittedName, setSubmittedName] = useState<string>('')
-	const [highscores, setHighscores] = useState<
-		| {
-				name: string
-				score: number
-				wpm: number
-				time: number
-		  }[]
-		| null
-	>(null)
+	const [highscores, setHighscores] = useState<ScoreValues[] | null>(null)
 
 	const pushScoreToLocalStorage = (): void => {
 		localStorage.setItem(
-			submissionName,
+			toBeSubmittedName,
 			JSON.stringify({
 				time: secondsPerRound,
 				score: count,
 				wpm: wpm,
 			})
 		)
-	}
-
-	type ScoreValues = {
-		name: string
-		score: number
-		time: number
-		wpm: number
 	}
 
 	type LocalStorageData = {
@@ -55,33 +47,31 @@ function GameOver() {
 		let values: ScoreValues[] = []
 		let keys = Object.keys(localStorage)
 
-		if (keys.length > 5) {
-			for (let i = 0; i < 5; i++) {
-				const scoreData: LocalStorageData = JSON.parse(
-					localStorage?.getItem(keys[i]) ?? ''
-				)
-				keys[i] !== 'user' &&
-					values.push({
-						name: keys[i],
-						...scoreData,
-					})
-			}
-			setHighscores(values)
-		} else {
-			for (let i = 0; i < keys.length; i++) {
-				const scoreData: LocalStorageData = JSON.parse(
-					localStorage.getItem(keys[i]) ?? ''
-				)
+		for (let i = 0; i < keys.length; i++) {
+			const scoreData: LocalStorageData = JSON.parse(
+				localStorage?.getItem(keys[i]) ?? ''
+			)
+			keys[i] !== 'user' &&
 				values.push({
 					name: keys[i],
 					...scoreData,
 				})
-			}
-			setHighscores(values)
 		}
+		setHighscores(
+			keys.length > 5
+				? values
+						.sort((a, b) => {
+							if (a.time > b.time) return -1
+							if (a.time === b.time && a.score > b.score)
+								return -1
+							if (b.score > a.score) return 1
+							return 0
+						})
+						.slice(0, 5)
+				: values
+		)
 	}
 
-	//	retrieve highscores on load
 	useEffect(() => {
 		getTopScoresFromStorage()
 	}, [])
@@ -113,10 +103,20 @@ function GameOver() {
 					id='submissionInputForm'
 					className='m-8'
 					onSubmit={(e) => {
+						const newScoreValues: ScoreValues = {
+							name: toBeSubmittedName,
+							score: count,
+							wpm: wpm,
+							time: secondsPerRound,
+						}
 						e.preventDefault()
 						pushScoreToLocalStorage()
-						getTopScoresFromStorage()
-						setSubmittedName(submissionName)
+						setHighscores(
+							highscores
+								? highscores.concat(newScoreValues)
+								: [newScoreValues]
+						)
+						setSubmittedName(toBeSubmittedName)
 					}}
 				>
 					<input
@@ -124,13 +124,13 @@ function GameOver() {
 						id='nameInput'
 						className='w-48 mx-4 p-2 bg-none border-0 text-indigo-600 rounded-lg cursor-text text-sm'
 						placeholder='Name for your submission'
-						value={submissionName}
+						value={toBeSubmittedName}
 						onChange={(e) => {
 							if (e.target.value.length > 10) {
 								console.log('nice try!')
 								return
 							}
-							setSubmissionName(e.target.value)
+							setToBeSubmittedName(e.target.value)
 						}}
 					/>
 					<button
@@ -157,17 +157,16 @@ function GameOver() {
 								secondsRef?.current?.value &&
 								secondsRef?.current?.value?.length > 0
 							) {
+								const newSecondsPerRound = parseInt(
+									secondsRef.current.value.slice(0, 2)
+								)
 								dispatch({
 									type: 'SET_SECONDS_PER_ROUND',
-									payload: parseInt(
-										secondsRef.current.value.slice(0, 2)
-									),
+									payload: newSecondsPerRound,
 								})
 								dispatch({
 									type: 'SET_SECONDS_REMAINING',
-									payload: parseInt(
-										secondsRef.current.value.slice(0, 2)
-									),
+									payload: newSecondsPerRound,
 								})
 							} else {
 								dispatch({
